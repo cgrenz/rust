@@ -1,10 +1,10 @@
 #![feature(generic_arg_infer)]
 
-struct Foo<const N: usize>;
+struct Foo<const N: usize> {}
 
 impl Clone for Foo<1> {
     fn clone(&self) -> Self {
-        Foo
+        Foo {}
     }
 }
 impl Copy for Foo<1> {}
@@ -14,7 +14,7 @@ fn unify<const N: usize>(_: &[Foo<N>; N]) {
 }
 
 fn main() {
-    let x = &[Foo::<_>; _];
+    let x = &[Foo::<_> {}; _];
     //~^ ERROR: type annotations needed for `&[Foo<_>; _]`
     _ = unify(x);
 }

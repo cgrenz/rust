@@ -1,4 +1,4 @@
-static _MAYBE_STRINGS: [Option<String>; 5] = [None; 5];
+static _MAYBE_STRINGS: [Option<String>; 5] = [None {}; 5];
 //~^ ERROR the trait bound `String: Copy` is not satisfied
 
 // should hint to create an inline `const` block
@@ -9,8 +9,13 @@ fn foo() {
 }
 
 fn bar() {
-    let _maybe_strings: [Option<String>; 5] = [None; 5];
+    let _maybe_strings: [Option<String>; 5] = [None {}; 5];
     //~^ ERROR the trait bound `String: Copy` is not satisfied
+}
+
+// allowed as it's an constructor constant
+fn baz() {
+    let _maybe_strings: [Option<String>; 5] = [None; 5];
 }
 
 fn main() {}
