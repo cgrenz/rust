@@ -115,7 +115,13 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                     hir::ExprKind::ConstBlock(..) => return None,
                     hir::ExprKind::Path(qpath) => {
                         let res = self.typeck_results.borrow().qpath_res(qpath, element.hir_id);
-                        if let Res::Def(DefKind::Const | DefKind::AssocConst, _) = res {
+                        if let Res::Def(
+                            DefKind::Const
+                            | DefKind::AssocConst
+                            | DefKind::Ctor(_, CtorKind::Const),
+                            _,
+                        ) = res
+                        {
                             return None;
                         }
                     }
@@ -156,12 +162,6 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                     }
                     _ => traits::IsConstable::No,
                 },
-                hir::ExprKind::Path(qpath) => {
-                    match self.typeck_results.borrow().qpath_res(&qpath, element.hir_id) {
-                        Res::Def(DefKind::Ctor(_, CtorKind::Const), _) => traits::IsConstable::Ctor,
-                        _ => traits::IsConstable::No,
-                    }
-                }
                 _ => traits::IsConstable::No,
             };
 
